@@ -204,10 +204,10 @@ const languages = [
 const artworks: Artwork[] = [
   {
     title: "Felix x Copa",
-    image: "/FelixxCopa",
+    image: "/dibujos/FelixxCopa.png",
     year: 2026,
     technique: "Arte Digital",
-  }
+  },
 ];
 
 const achievements: Achievement[] = [
