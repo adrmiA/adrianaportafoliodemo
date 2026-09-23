@@ -201,7 +201,14 @@ const languages = [
   { name: "Inglés", level: "B2 · Intermedio alto" },
 ];
 
-const artworks: Artwork[] = [];
+const artworks: Artwork[] = [
+  {
+    title: "Felix x Copa",
+    image: "/FelixxCopa",
+    year: 2026,
+    technique: "Arte Digital",
+  }
+];
 
 const achievements: Achievement[] = [
   {
