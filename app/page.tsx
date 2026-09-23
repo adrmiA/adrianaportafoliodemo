@@ -11,11 +11,18 @@ interface SkillCategory {
   groups: SkillGroup[];
 }
 
-interface EducationItem {
-  school: string;
-  period: string;
-  status: "COMPLETADO" | "EN CURSO";
-  note?: string;
+interface ProjectLink {
+  label: string;
+  href: string;
+}
+
+interface Project {
+  title: string;
+  description: string;
+  tech: string[];
+  year?: string;
+  image?: string;
+  links: ProjectLink[];
 }
 
 type AchievementType = "Certificado" | "Diploma de participación";
@@ -72,7 +79,7 @@ const PHOTO: string | null = "/FotoPerfil.png";
 
 const navLinks = [
   { href: "#jugadora", label: "Jugadora" },
-  { href: "#progreso", label: "Progreso" },
+  { href: "#proyectos", label: "Proyectos" },
   { href: "#inventario", label: "Inventario" },
   { href: "#galeria", label: "Galería" },
   { href: "#logros", label: "Logros" },
@@ -83,25 +90,52 @@ const stats = [
   { label: "Especialidad", value: "Desarrollo de Software" },
   { label: "Área", value: "Videojuegos / UI" },
   { label: "Modalidad", value: WORK_MODE },
-  { label: "Graduación", value: "Dic. 2026" },
 ];
 
-const education: EducationItem[] = [
+const projects: Project[] = [
   {
-    school: "Colegio Don Bosco",
-    period: "2012 – 2016",
-    status: "COMPLETADO",
+    title: "Plumita Gris",
+    description:
+      "Sistema de ventas con carrito, pedidos, pagos y modalidades de entrega, dividido en tres partes: base de datos en SQL Server con vistas y registro de auditoría, API REST en ASP.NET Core con contraseñas cifradas mediante PBKDF2, y una aplicación web en Spring Boot con inicio de sesión que consume la API.",
+    tech: [
+      "SQL Server",
+      "C#",
+      "ASP.NET Core",
+      "Entity Framework",
+      "Java",
+      "Spring Boot",
+      "Thymeleaf",
+    ],
+    year: "2026",
+    links: [
+      { label: "Base de datos", href: `${GITHUB}/ProyectoDDB_PlumitaGris` },
+      { label: "API", href: `${GITHUB}/ProyectoAPI_PlumitaGris` },
+      { label: "Web", href: `${GITHUB}/ProyectoSpringWeb_PlumitaGris` },
+    ],
   },
   {
-    school: "Colegio Profesor José Ernesto Payés",
-    period: "2017 – 2020",
-    status: "COMPLETADO",
+    title: "Gestor de Ferretería",
+    description:
+      "Aplicación de escritorio para administrar productos, proveedores y ventas de una ferretería. Una API REST en ASP.NET Core con MySQL gestiona los datos y un cliente en JavaFX la consume.",
+    tech: ["C#", "ASP.NET Core", "MySQL", "Java", "JavaFX"],
+    year: "2026",
+    links: [
+      { label: "API", href: `${GITHUB}/Ferreteria_App` },
+      {
+        label: "Cliente JavaFX",
+        href: `${GITHUB}/Ferreteria_App/tree/ClientJava`,
+      },
+    ],
   },
   {
-    school: "Colegio Español Padre Arrupe",
-    period: "2021 – Actualidad",
-    status: "EN CURSO",
-    note: "Graduación prevista: diciembre de 2026",
+    title: "Tarjeta Profesional Interactiva",
+    description:
+      "App Android que muestra una tarjeta de presentación con datos de contacto y controles interactivos: modo claro/oscuro, indicador de disponibilidad, mostrar u ocultar la foto y cambiar la frase y el tamaño del avatar.",
+    tech: ["Kotlin", "Jetpack Compose", "Material 3", "Android"],
+    year: "2026",
+    links: [
+      { label: "Código", href: `${GITHUB}/TarjetaProfesionalInteractiva` },
+    ],
   },
 ];
 
@@ -424,35 +458,77 @@ function About() {
   );
 }
 
-function Progress() {
+function ProjectCard({ project }: { project: Project }) {
   return (
-    <section id="progreso" className={section}>
-      <SectionHeader tag="02" title="Progreso" subtitle="Formación académica" />
-
-      <div className="grid gap-6 md:grid-cols-2">
-        {education.map((item, i) => (
-          <div key={item.school} className={`${panel} p-6`}>
-            <div className="flex items-center justify-between font-mono text-xs">
-              <span className="text-emerald-300">PUNTO DE GUARDADO {i + 1}</span>
-
-              <span
-                className={`border-2 border-black px-2 py-0.5 font-bold ${
-                  item.status === "EN CURSO"
-                    ? "bg-[#c6f432] text-black"
-                    : "bg-[#14141b] text-emerald-300"
-                }`}
-              >
-                {item.status}
-              </span>
-            </div>
-
-            <h3 className="mt-4 text-xl font-bold text-white">{item.school}</h3>
-            <p className="mt-1 font-mono text-sm text-slate-400">{item.period}</p>
-
-            {item.note && (
-              <p className="mt-2 text-sm text-[#c6f432]">{item.note}</p>
-            )}
+    <article className={`${panel} ${panelHover} group flex flex-col`}>
+      <div className="relative aspect-video w-full overflow-hidden border-b-4 border-black bg-[#14141b]">
+        {project.image ? (
+          <Image
+            src={project.image}
+            alt={`Captura de ${project.title}`}
+            fill
+            sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
+            className="object-cover object-top transition duration-300 group-hover:scale-105"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center bg-[repeating-linear-gradient(45deg,#1b1b24_0_10px,#14141b_10px_20px)] font-mono text-4xl font-black text-[#c6f432]/60">
+            &lt;/&gt;
           </div>
+        )}
+
+        {project.year && (
+          <span className="absolute right-3 top-3 border-2 border-black bg-[#14141b] px-2 py-0.5 font-mono text-xs text-slate-300">
+            {project.year}
+          </span>
+        )}
+      </div>
+
+      <div className="flex flex-1 flex-col p-5">
+        <h3 className="text-xl font-bold text-white">{project.title}</h3>
+
+        <p className="mt-2 flex-1 text-sm leading-relaxed">
+          {project.description}
+        </p>
+
+        <div className="mt-4 flex flex-wrap gap-2">
+          {project.tech.map((t) => (
+            <span
+              key={t}
+              className="border-2 border-black bg-[#14141b] px-2 py-0.5 font-mono text-xs text-emerald-300"
+            >
+              {t}
+            </span>
+          ))}
+        </div>
+
+        {project.links.length > 0 && (
+          <div className="mt-5 flex flex-wrap gap-3">
+            {project.links.map((l) => (
+              <a
+                key={l.label}
+                href={l.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="min-w-[6rem] flex-1 border-2 border-black bg-[#c6f432] px-3 py-2 text-center font-mono text-xs font-bold uppercase text-black shadow-[3px_3px_0_0_#000]"
+              >
+                {l.label} ▶
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+    </article>
+  );
+}
+
+function Projects() {
+  return (
+    <section id="proyectos" className={section}>
+      <SectionHeader tag="02" title="Proyectos" subtitle="Lo que he construido" />
+
+      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        {projects.map((project) => (
+          <ProjectCard key={project.title} project={project} />
         ))}
       </div>
     </section>
@@ -797,7 +873,7 @@ export default function Home() {
       <Header />
       <Hero />
       <About />
-      <Progress />
+      <Projects />
       <Skills />
       <Gallery />
       <Achievements />
