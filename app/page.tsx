@@ -205,7 +205,7 @@ const artworks: Artwork[] = [
   {
     title: "Felix x Copa",
     image: "/dibujos/FelixxCopa.png",
-    year: 2026,
+    year: "2026",
     technique: "Arte Digital",
   },
 ];
